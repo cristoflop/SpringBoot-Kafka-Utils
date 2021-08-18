@@ -25,4 +25,9 @@ public class TopicUtilsRestController {
         service.addMessageInTopic(messageDto);
     }
 
+    @PatchMapping("/topics")
+    public void sanearTopics() {
+        this.service.sanearTopics();
+    }
+
 }

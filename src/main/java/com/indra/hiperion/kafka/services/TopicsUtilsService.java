@@ -49,4 +49,12 @@ public class TopicsUtilsService {
         kt.send(messageDto.getTopic(), messageDto.getMessage());
     }
 
+    public void sanearTopics() {
+        String testMessage = "{'message': 'message from code'}";
+        this.getTopics().forEach(item -> {
+            if (item.getName().contains("BCN_") && item.getName().contains("_JSON"))
+                this.addMessageInTopic(new MessageDto(item.getName(), testMessage));
+        });
+    }
+
 }

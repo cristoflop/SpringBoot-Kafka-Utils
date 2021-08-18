@@ -6,6 +6,11 @@ public class MessageDto {
 
     private String message;
 
+    public MessageDto(String topic, String message) {
+        this.topic = topic;
+        this.message = message;
+    }
+
     public String getTopic() {
         return topic;
     }
