@@ -3,16 +3,10 @@ package com.indra.hiperion.kafka.services;
 import com.indra.hiperion.kafka.services.dto.MessageDto;
 import com.indra.hiperion.kafka.services.dto.TopicInfoDto;
 import org.apache.kafka.clients.consumer.Consumer;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.common.PartitionInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -23,13 +17,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class TopicsUtilsService {
-
-    private final Logger log = LoggerFactory.getLogger(TopicsUtilsService.class);
-
-    private int count = 0;
-
-    @Value("${SPECIFIC_TOPIC_TO_CONSUME}")
-    private String topicToSubscribe;
 
     @Autowired
     private ConsumerFactory<String, String> consumerFactory;
@@ -62,25 +49,12 @@ public class TopicsUtilsService {
         kt.send(messageDto.getTopic(), messageDto.getMessage());
     }
 
-    public void sanearTopics() {
+    public void cleanUpTopics() {
         String testMessage = "{'message': 'message from code'}";
         this.getTopics().forEach(item -> {
             if (item.getName().contains("BCN_") && item.getName().contains("_JSON"))
                 this.addMessageInTopic(new MessageDto(item.getName(), testMessage));
         });
-    }
-
-    public String getTopicToSubscribe() {
-        return topicToSubscribe;
-    }
-
-    @KafkaListener(topics = {"#{topicsUtilsService.getTopicToSubscribe()}"})
-    public void listenTopic(ConsumerRecord<?, ?> message, Acknowledgment ack) {
-        log.info("Message {} in: \n Topic: {} \n Partition: {} \n Offset {}",
-                count++,
-                message.topic(),
-                message.partition(),
-                message.offset());
     }
 
 }

@@ -3,31 +3,30 @@ package com.indra.hiperion.kafka.controllers;
 import com.indra.hiperion.kafka.services.TopicsUtilsService;
 import com.indra.hiperion.kafka.services.dto.MessageDto;
 import com.indra.hiperion.kafka.services.dto.TopicInfoDto;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Set;
 
 @RestController
-@RequestMapping("/api")
-public class TopicUtilsRestController {
+public class TopicUtilsRestController implements TopicUtilsApi {
 
-    @Autowired
-    private TopicsUtilsService service;
+    private final TopicsUtilsService topicsUtilsService;
 
-    @GetMapping("/topics")
+    public TopicUtilsRestController(TopicsUtilsService topicsUtilsService) {
+        this.topicsUtilsService = topicsUtilsService;
+    }
+
     public Set<TopicInfoDto> getTopics() {
-        return service.getTopics();
+        return topicsUtilsService.getTopics();
     }
 
-    @PostMapping("/topics")
     public void addMessageInTopic(@RequestBody MessageDto messageDto) {
-        service.addMessageInTopic(messageDto);
+        topicsUtilsService.addMessageInTopic(messageDto);
     }
 
-    @PatchMapping("/topics")
-    public void sanearTopics() {
-        this.service.sanearTopics();
+    public void cleanUpTopics() {
+        topicsUtilsService.cleanUpTopics();
     }
 
 }
