@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -24,6 +25,8 @@ import java.util.stream.Collectors;
 public class TopicsUtilsService {
 
     private final Logger log = LoggerFactory.getLogger(TopicsUtilsService.class);
+
+    private int count = 0;
 
     @Value("${SPECIFIC_TOPIC_TO_CONSUME}")
     private String topicToSubscribe;
@@ -72,10 +75,12 @@ public class TopicsUtilsService {
     }
 
     @KafkaListener(topics = {"#{topicsUtilsService.getTopicToSubscribe()}"})
-    public void listenTopic(ConsumerRecord<?, ?> message) {
-        log.info("New message: \n Topic: {} \n Partition: {}",
+    public void listenTopic(ConsumerRecord<?, ?> message, Acknowledgment ack) {
+        log.info("Message {} in: \n Topic: {} \n Partition: {} \n Offset {}",
+                count++,
                 message.topic(),
-                message.partition());
+                message.partition(),
+                message.offset());
     }
 
 }
