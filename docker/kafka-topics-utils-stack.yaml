@@ -8,3 +8,4 @@ services:
     environment:
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka1:9092,kafka2:9093,kafka3:9094
       - SPECIFIC_CONSUMER_GROUP=CmsGroupId
+      - LOG_FILENAME=topic-monitoring.log
