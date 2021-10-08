@@ -1,5 +1,6 @@
 package com.indra.hiperion.kafka.controllers;
 
+import com.indra.hiperion.kafka.Utils.TopicMonitoringFileReader;
 import com.indra.hiperion.kafka.services.TopicsUtilsService;
 import com.indra.hiperion.kafka.services.dto.MessageDto;
 import com.indra.hiperion.kafka.services.dto.TopicInfoDto;
@@ -13,8 +14,11 @@ public class TopicUtilsRestController implements TopicUtilsApi {
 
     private final TopicsUtilsService topicsUtilsService;
 
-    public TopicUtilsRestController(TopicsUtilsService topicsUtilsService) {
+    private final TopicMonitoringFileReader fileReader;
+
+    public TopicUtilsRestController(TopicsUtilsService topicsUtilsService, TopicMonitoringFileReader fileReader) {
         this.topicsUtilsService = topicsUtilsService;
+        this.fileReader = fileReader;
     }
 
     public Set<TopicInfoDto> getTopics() {
@@ -27,6 +31,11 @@ public class TopicUtilsRestController implements TopicUtilsApi {
 
     public void cleanUpTopics() {
         topicsUtilsService.cleanUpTopics();
+    }
+
+    @Override
+    public String consumerMonitoring() {
+        return fileReader.getFileContent();
     }
 
 }
